@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+//TODO сделать глобальную переменную под путь для всех файлов
+
 namespace LR1__program_CS
 {
     public partial class Form1 : Form
