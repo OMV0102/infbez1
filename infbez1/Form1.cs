@@ -11,7 +11,7 @@ using System.IO;
 
 //TODO сделать глобальную переменную под путь для всех файлов
 
-namespace LR1__program_CS
+namespace infbez1
 {
     public partial class Form1 : Form
     {
@@ -19,13 +19,50 @@ namespace LR1__program_CS
         {
             InitializeComponent();
         }
-        
+
+        static bool isbinfile; // Флаг, тип входного файла
+
 
         // Если нажимаем на кнопку ПРОЧИТАТЬ
         private void btm_Rfile_text_Click(object sender, EventArgs e)
         {
             try
             {
+
+                string filepath = txt_file_in.Text;
+                string filetext = "";
+                // читаем файл в строку
+                filetext = File.ReadAllText(filepath, Encoding.Default);
+                byte[] bb = Encoding.Default.GetBytes(filetext);
+
+                Byte[] b = File.ReadAllBytes(filepath);
+                //filetext = filetext.Replace('\0',' ') ;
+                
+                filetext = Convert.ToBase64String(b);
+                /*int nn = filetext.Length;
+                for (int i = 0; i < nn; i++)
+                {
+                    char g = filetext[i];
+                    txt_in.Text += g;
+                }*/
+
+
+                /*using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))
+                {
+                    // пока не достигнут конец файла
+                    // считываем каждое значение из файла
+                    while (reader.PeekChar() > -1)
+                    {
+                        string tmp = reader.ReadString();
+                        str += tmp;
+
+                        
+                    }
+                }*/
+                txt_in.Text = filetext;
+
+
+                //======================================================
                 var n = new Methods();
             // Если какое то из полей не заполнено:
            // файл с исходным текстом или файл с символами алфавита или файл с вероятностями
@@ -34,24 +71,6 @@ namespace LR1__program_CS
                     MessageBox.Show("Не для всех полей указаны имена файлов!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                
-                // очистка (левого) поля исходного текста
-                txt_in.Clear();  
-                // очистка (правого) поля полученного текста
-                txt_out.Clear();
-
-                // Вывод исходного текста в левое поле
-                txt_in.Text = n.Text_Read(txt_file_in.Text);
-
-                // Вывод символов алфавита
-                //txt_alph.Text = n.Text_Read(txt_file_alph.Text);
-
-                // Вывод количества символов в алфавите
-                //string[] tmp1 = txt_alph.Text.Split(' ');
-                //txt_count_alph.Text = Convert.ToString(tmp1.Length);
-
-                // Вывод вероятностей алфавита
-                //txt_p.Text = n.Text_Read(txt_file_p.Text);
             }
             catch (Exception error)
             {
@@ -64,7 +83,7 @@ namespace LR1__program_CS
         {
             try
             {
-                var m = new Algorithm_Shannon();
+                //var m = new Algorithm_Shannon();
                 // Если какое то из полей не заполнено:
                 // исходный текст или символы алфавита или вероятности
                 if (txt_in.Text == "")
@@ -93,7 +112,7 @@ namespace LR1__program_CS
                 //txt_code.Text = m.Show_Codes(); 
 
                 // Кодируем исходный текст и выводим его в (правое) поле
-                txt_out.Text = m.Encode_text(txt_in.Text);
+                //txt_out.Text = m.Encode_text(txt_in.Text);
 
                 // Вывод средней длины кодового слова
                 //txt_average_length.Text = m.Average_Length();
@@ -129,42 +148,37 @@ namespace LR1__program_CS
                 return;
             }
             // вызов функции, которая записывает текст
-            n.Text_Save(txt_file_out.Text, txt_out.Text); 
+            //n.Text_Save(txt_file_out.Text, txt_out.Text); 
             MessageBox.Show("Полученный текст записан в файл.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
 
-        // кнопка "..." ВЫБОР ВХОДНОГО ФАЙЛА 
+        // Кнопка "..." ВЫБОР ВХОДНОГО ФАЙЛА 
         private void btn_choice_filein_Click(object sender, EventArgs e)
         {
+            string tmp = "";
             OpenFileDialog opf = new OpenFileDialog();
             opf.Title = "Выбрать файл ..."; // Заголовок окна
-            opf.InitialDirectory = ""; //Начальный путь в окне
+            if (txt_file_in.TextLength == 0) //Начальный путь в окне
+                opf.InitialDirectory = Application.StartupPath; // Папка проекта
+            else
+                opf.InitialDirectory = txt_file_in.Text;
+
             if (opf.ShowDialog() == DialogResult.OK)
             {
-                // получаем имя выбранного файла
-                string path = opf.FileName;
-                txt_file_in.Text = path;
-                string str = "";
-                // читаем файл в строку
-                //string fileText = System.IO.File.ReadAllText(path,Encoding.Default);
-                Byte[] b = System.IO.File.ReadAllBytes(path);
+                tmp = opf.SafeFileName;
+                int n = opf.SafeFileName.Length;
+                string ras = tmp[n - 3].ToString() + tmp[n - 2].ToString() + tmp[n - 1].ToString();
+                if (ras == "txt") //если расширение txt
+                    isbinfile = false; // файл обычный
+                else
+                    isbinfile = true; // файл считаем как бинарный
 
-                /*using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))
-                {
-                    // пока не достигнут конец файла
-                    // считываем каждое значение из файла
-                    while (reader.PeekChar() > -1)
-                    {
-                        string tmp = reader.ReadString();
-                        str += tmp;
-
-                        
-                    }
-                }*/
-                txt_in.Text = str;
+                // получаем путь С НАЗВАНИЕМ файла
+                txt_file_in.Text = opf.FileName;
             }
         }
+
     }
 
     static class CONST

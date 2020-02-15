@@ -1,4 +1,4 @@
-﻿namespace LR1__program_CS
+﻿namespace infbez1
 {
     partial class Form1
     {
@@ -41,6 +41,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.btn_choice_filein = new System.Windows.Forms.Button();
             this.btn_choice_fileout = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txt_in
@@ -97,10 +98,10 @@
             this.txt_file_in.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txt_file_in.Location = new System.Drawing.Point(16, 54);
             this.txt_file_in.Name = "txt_file_in";
+            this.txt_file_in.ReadOnly = true;
             this.txt_file_in.Size = new System.Drawing.Size(532, 27);
             this.txt_file_in.TabIndex = 7;
             this.txt_file_in.TabStop = false;
-            this.txt_file_in.Text = "in_text.txt";
             // 
             // label1
             // 
@@ -127,6 +128,7 @@
             this.txt_file_out.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txt_file_out.Location = new System.Drawing.Point(613, 54);
             this.txt_file_out.Name = "txt_file_out";
+            this.txt_file_out.ReadOnly = true;
             this.txt_file_out.Size = new System.Drawing.Size(532, 27);
             this.txt_file_out.TabIndex = 10;
             this.txt_file_out.TabStop = false;
@@ -192,6 +194,16 @@
             this.btn_choice_fileout.Text = ". . .";
             this.btn_choice_fileout.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(391, 389);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(18, 19);
+            this.label3.TabIndex = 42;
+            this.label3.Text = "0";
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -200,6 +212,7 @@
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(1206, 612);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.btn_choice_fileout);
             this.Controls.Add(this.btn_choice_filein);
             this.Controls.Add(this.label13);
@@ -239,6 +252,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btn_choice_filein;
         private System.Windows.Forms.Button btn_choice_fileout;
+        private System.Windows.Forms.Label label3;
     }
 }
 
