@@ -55,6 +55,7 @@
             this.txt_in.TabStop = false;
             this.txt_in.Tag = "";
             this.txt_in.Text = "";
+            this.txt_in.TextChanged += new System.EventHandler(this.txt_in_TextChanged);
             // 
             // txt_out
             // 

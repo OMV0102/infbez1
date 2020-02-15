@@ -21,61 +21,43 @@ namespace infbez1
         }
 
         static bool isbinfile; // Флаг, тип входного файла
-
+        static string path; // Путь до выбранного файла
+        byte[] bytearr;
 
         // Если нажимаем на кнопку ПРОЧИТАТЬ
         private void btm_Rfile_text_Click(object sender, EventArgs e)
         {
-            try
+            string filetext = "";
+
+            if (txt_file_in.TextLength > 0)
             {
-
-                string filepath = txt_file_in.Text;
-                string filetext = "";
-                // читаем файл в строку
-                filetext = File.ReadAllText(filepath, Encoding.Default);
-                byte[] bb = Encoding.Default.GetBytes(filetext);
-
-                Byte[] b = File.ReadAllBytes(filepath);
-                //filetext = filetext.Replace('\0',' ') ;
-                
-                filetext = Convert.ToBase64String(b);
-                /*int nn = filetext.Length;
-                for (int i = 0; i < nn; i++)
+                if (File.Exists(path) == true)
                 {
-                    char g = filetext[i];
-                    txt_in.Text += g;
-                }*/
-
-
-                /*using (BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open)))
-                {
-                    // пока не достигнут конец файла
-                    // считываем каждое значение из файла
-                    while (reader.PeekChar() > -1)
+                    if (isbinfile == true)
                     {
-                        string tmp = reader.ReadString();
-                        str += tmp;
-
+                        bytearr = File.ReadAllBytes(path);
+                        txt_in.Text = Encoding.Default.GetString(bytearr).Replace('\0', ' ');
+                    }
+                    else
+                    {
+                        filetext = File.ReadAllText(path, Encoding.Default);
+                        bytearr = Encoding.Default.GetBytes(filetext);
+                        txt_in.Text = filetext;
                         
                     }
-                }*/
-                txt_in.Text = filetext;
-
-
-                //======================================================
-                var n = new Methods();
-            // Если какое то из полей не заполнено:
-           // файл с исходным текстом или файл с символами алфавита или файл с вероятностями
-                if (txt_file_in.Text == "")
+                }
+                else
                 {
-                    MessageBox.Show("Не для всех полей указаны имена файлов!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Файла \"" + path + "\" не существует!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
-            catch (Exception error)
+            else
             {
-                MessageBox.Show("Некоторые исходные данные были НЕ прочитаны!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Укажите файл для чтения!", " Не указан файл", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+
         }   
 
         // Если нажимаем на кнопку ХЭШИРОВАТЬ
@@ -175,10 +157,15 @@ namespace infbez1
                     isbinfile = true; // файл считаем как бинарный
 
                 // получаем путь С НАЗВАНИЕМ файла
-                txt_file_in.Text = opf.FileName;
+                path = opf.FileName;
+                txt_file_in.Text = path;
             }
         }
 
+        private void txt_in_TextChanged(object sender, EventArgs e)
+        {
+            label3.Text = txt_in.TextLength.ToString();
+        }
     }
 
     static class CONST
