@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.in_txt = new System.Windows.Forms.RichTextBox();
-            this.out_txt = new System.Windows.Forms.RichTextBox();
+            this.txt_in = new System.Windows.Forms.RichTextBox();
+            this.txt_out = new System.Windows.Forms.RichTextBox();
             this.btm_coding = new System.Windows.Forms.Button();
             this.btm_Rfile_text = new System.Windows.Forms.Button();
             this.txt_file_in = new System.Windows.Forms.TextBox();
@@ -43,27 +43,27 @@
             this.btn_choice_fileout = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // in_txt
+            // txt_in
             // 
-            this.in_txt.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.in_txt.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.in_txt.Location = new System.Drawing.Point(12, 130);
-            this.in_txt.Name = "in_txt";
-            this.in_txt.Size = new System.Drawing.Size(585, 220);
-            this.in_txt.TabIndex = 0;
-            this.in_txt.TabStop = false;
-            this.in_txt.Tag = "";
-            this.in_txt.Text = "";
+            this.txt_in.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txt_in.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txt_in.Location = new System.Drawing.Point(12, 130);
+            this.txt_in.Name = "txt_in";
+            this.txt_in.Size = new System.Drawing.Size(585, 220);
+            this.txt_in.TabIndex = 0;
+            this.txt_in.TabStop = false;
+            this.txt_in.Tag = "";
+            this.txt_in.Text = "";
             // 
-            // out_txt
+            // txt_out
             // 
-            this.out_txt.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.out_txt.Location = new System.Drawing.Point(609, 130);
-            this.out_txt.Name = "out_txt";
-            this.out_txt.Size = new System.Drawing.Size(585, 220);
-            this.out_txt.TabIndex = 2;
-            this.out_txt.TabStop = false;
-            this.out_txt.Text = "";
+            this.txt_out.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txt_out.Location = new System.Drawing.Point(609, 130);
+            this.txt_out.Name = "txt_out";
+            this.txt_out.Size = new System.Drawing.Size(585, 220);
+            this.txt_out.TabIndex = 2;
+            this.txt_out.TabStop = false;
+            this.txt_out.Text = "";
             // 
             // btm_coding
             // 
@@ -82,13 +82,13 @@
             // 
             this.btm_Rfile_text.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btm_Rfile_text.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btm_Rfile_text.Location = new System.Drawing.Point(487, 20);
+            this.btm_Rfile_text.Location = new System.Drawing.Point(422, 20);
             this.btm_Rfile_text.Name = "btm_Rfile_text";
-            this.btm_Rfile_text.Size = new System.Drawing.Size(110, 27);
+            this.btm_Rfile_text.Size = new System.Drawing.Size(175, 27);
             this.btm_Rfile_text.TabIndex = 6;
             this.btm_Rfile_text.TabStop = false;
             this.btm_Rfile_text.Tag = "";
-            this.btm_Rfile_text.Text = "Прочитать";
+            this.btm_Rfile_text.Text = "Прочитать файл";
             this.btm_Rfile_text.UseVisualStyleBackColor = true;
             this.btm_Rfile_text.Click += new System.EventHandler(this.btm_Rfile_text_Click);
             // 
@@ -136,9 +136,9 @@
             // 
             this.btm_Wfile_text.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btm_Wfile_text.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btm_Wfile_text.Location = new System.Drawing.Point(1035, 24);
+            this.btm_Wfile_text.Location = new System.Drawing.Point(1016, 24);
             this.btm_Wfile_text.Name = "btm_Wfile_text";
-            this.btm_Wfile_text.Size = new System.Drawing.Size(159, 27);
+            this.btm_Wfile_text.Size = new System.Drawing.Size(178, 27);
             this.btm_Wfile_text.TabIndex = 11;
             this.btm_Wfile_text.TabStop = false;
             this.btm_Wfile_text.Text = "Записать в файл";
@@ -211,8 +211,8 @@
             this.Controls.Add(this.txt_file_in);
             this.Controls.Add(this.btm_Rfile_text);
             this.Controls.Add(this.btm_coding);
-            this.Controls.Add(this.out_txt);
-            this.Controls.Add(this.in_txt);
+            this.Controls.Add(this.txt_out);
+            this.Controls.Add(this.txt_in);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -226,8 +226,8 @@
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox in_txt;
-        private System.Windows.Forms.RichTextBox out_txt;
+        private System.Windows.Forms.RichTextBox txt_in;
+        private System.Windows.Forms.RichTextBox txt_out;
         private System.Windows.Forms.Button btm_coding;
         private System.Windows.Forms.Button btm_Rfile_text;
         private System.Windows.Forms.TextBox txt_file_in;
