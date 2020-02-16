@@ -23,91 +23,32 @@ namespace infbez1
     }
 
 
-    // Класс с побитовыми операциями
-    public static class bitfunc
+    // Класс с побитовыми операциями (для самого хэширования)
+    public static class bitFunc
     {
+        // Начальные значения хеш-функции
+        public static UInt32 h0 = 0x67452301;
+        public static UInt32 h1 = 0xefcdab89;
+        public static UInt32 h2 = 0x98badcfe;
+        public static UInt32 h3 = 0x10325476;
 
-        // Дополняет дополнительные биты к битам текста для кратности длины = 448
-        public static BitArray add_extra_bit(BitArray x)
+        // циклический сдвиг влево на m бит
+        public static int shiftLeft(Byte b, int m)
         {
-            int N = x.Length;
-            int Nnew = 0;
-            if (N % 512 < 448)
-                Nnew = N + 448 - (N % 512);
-
-            BitArray y = new BitArray(Nnew);
-
-            // скопировали уже имеющийся биты
-            for(int j = 0; j < N; j++)
-            {
-                y[j] = x[j];
-            }
             
-            y[N] = true; // Добавляем бит 1
-            int i = N+1;
-            while(i < Nnew) // Дополняются нулевыми битами до 448
-            {
-                y[i] = false;
-                i++;
-            }
-            return y;
+
+
+            BitArray bit = new BitArray(b);
+            return 1;
         }
 
-        // Дополняет биты длины исходного сообщения к битам текста до кратности длины = 512
-        public static BitArray add_length_bit(BitArray x, int b)
-        {
-            int N = x.Length;
-            int Nnew = 512;
-            string h = Convert.ToString(b, 2); // перевели в двоичную систему длину
-            string length_bin = new string('0',64 - h.Length); // определили недостающие спереди незначащие нули
-            length_bin += h; // приписали двоичное значение
-            // переконвертировали нули и единицы в true и false
-            bool[] length_bin_bool = new bool[64];
-            for(int j = 0; j < 64; j++)
-            {
-                if (length_bin[j] == '0')
-                    length_bin_bool[j] = false;
-                else
-                    length_bin_bool[j] = true;
-            }
-
-            BitArray y = new BitArray(Nnew);
-
-            // скопировали уже имеющийся биты
-            for (int j = 0; j < N; j++)
-            {
-                y[j] = x[j];
-            }
-            // Дополняем 448 бит до 512 битов двоичным представлением длины
-            int i = N;
-            int k = 48;
-            // дописываем младшие 4 байта (последние 16 бит)
-            bool bin_bool; ;
-            while (k < 64) 
-            {
-                //y[i] = Boolean.TryParse(length_bin[k], out bin_bool);
-                i++;
-                k++;
-            }
-            k = 0;
-            // дописываем с 1 до 48 бита
-            while (k < 48)
-            {
-               // y[i] = Convert.ToBoolean(Convert.ToInt16(length_bin[k]));
-                i++;
-                k++;
-            }
-
-
-            return y;
-        }
 
     }
 
-    // Класс с сменой endian
-    public static class endian
+    // Класс преобразованием сообщения для дальнейшего хэширования
+    public static class messageTransform
     {
-        // Переворачивает каждые 8 бит (каждый байт)
+        // Переворачивает каждые 8 бит (каждый байт) в последовательности бит
         // big -> little или little -> big endian
         public static BitArray each_byte_negativ_endian(BitArray x)
         {
@@ -156,5 +97,79 @@ namespace infbez1
             return y;
         }
 
+        // Дополняет дополнительные биты к битам текста для кратности длины = 448
+        public static BitArray add_extra_bit(BitArray x)
+        {
+            int N = x.Length;
+            int Nnew = 0;
+            if (N % 512 < 448)
+                Nnew = N + 448 - (N % 512);
+
+            BitArray y = new BitArray(Nnew);
+
+            // скопировали уже имеющийся биты
+            for(int j = 0; j < N; j++)
+            {
+                y[j] = x[j];
+            }
+            
+            y[N] = true; // Добавляем бит 1
+            int i = N+1;
+            while(i < Nnew) // Дополняются нулевыми битами до 448
+            {
+                y[i] = false;
+                i++;
+            }
+            return y;
+        }
+
+        // Дополняет биты длины исходного сообщения к битам текста до кратности длины = 512
+        public static BitArray add_length_bit(BitArray x, int b)
+        {
+            int N = x.Length;
+            int Nnew = 512;
+            string h = Convert.ToString(b, 2); // перевели в двоичную систему длину
+            string length_bin = new string('0',64 - h.Length); // определили недостающие спереди незначащие нули
+            length_bin += h; // приписали двоичное значение
+            // переконвертировали нули и единицы в "true" и "false"
+            string[] length_bin_str = new string[64];
+            for(int j = 0; j < 64; j++)
+            {
+                if (length_bin[j] == '0')
+                    length_bin_str[j] = "false";
+                else if (length_bin[j] == '1')
+                    length_bin_str[j] = "true";
+            }
+
+            BitArray y = new BitArray(Nnew);
+
+            // скопировали уже имеющийся биты
+            for (int j = 0; j < N; j++)
+            {
+                y[j] = x[j];
+            }
+            // Дополняем 448 бит до 512 битов двоичным представлением длины
+            int i = N;
+            int k = 32;
+            // дописываем младшие 4 байта (последние 32 бита)
+            bool val_bin = false;
+            while (k < 64) 
+            {
+                Boolean.TryParse(length_bin_str[k], out val_bin);
+                y[i] = val_bin;
+                i++;
+                k++;
+            }
+            k = 0;
+            // дописываем с 1 до 32 бита (старшие 4 байта)
+            while (k < 32)
+            {
+                Boolean.TryParse(length_bin_str[k], out val_bin);
+                y[i] = val_bin;
+                i++;
+                k++;
+            }
+            return y;
+        }
     }
 }

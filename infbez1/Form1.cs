@@ -64,13 +64,23 @@ namespace infbez1
             try
             {
                 var_glob.bitarr = new BitArray(var_glob.bytearr); // BitArray переделывает байты в биты little-endian
-                var_glob.bitarr = endian.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из полученных бит little-endian биты big-endian
-                var_glob.bitarr = bitfunc.add_extra_bit(var_glob.bitarr); // Добавляем доп. биты до длины кратной 448
-                var_glob.bitarr = endian.each_4byte_negativ_endian(var_glob.bitarr); // Конвертируем биты по 4 байта (1 слову) в биты little-endian
-                var_glob.bitarr = bitfunc.add_length_bit(var_glob.bitarr, var_glob.TextLength); // 
+                var_glob.bitarr = messageTransform.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из полученных бит little-endian биты big-endian
+                // 1 шаг
+                var_glob.bitarr = messageTransform.add_extra_bit(var_glob.bitarr); // Добавляем доп. биты до длины кратной 448
+                var_glob.bitarr = messageTransform.each_4byte_negativ_endian(var_glob.bitarr); // Конвертируем биты по 4 байта (1 слову) в биты little-endian
+                // 2 шаг
+                var_glob.bitarr = messageTransform.add_length_bit(var_glob.bitarr, var_glob.TextLength); // Добавили двоичное представление длины исходного текста
+                var_glob.bitarr = messageTransform.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из бит big-endian в little-endian, т.к. битово-байтовая конвертация идет как little-endian
+
+                var_glob.bytearrnew = new byte[var_glob.bitarr.Length/8]; // Исходный массив байтов до начала хэширования
+                var_glob.bitarr.CopyTo(var_glob.bytearrnew, 0); // из битов в байты
+
+                int t = var_glob.bytearrnew.Length / 512;
+
+                // Дальше хэширования начинается
 
 
-            }
+    }
             catch (Exception error)
             {
                 MessageBox.Show("Ошибка при хэшировании!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -140,7 +150,8 @@ namespace infbez1
         static public string path; // Путь до выбранного файла
         static public string filetext; // Считанный текст сообщения
         static public int TextLength; // Изначальный размер сообщения в байтах (1 символ = 1 байт)
-        static public byte[] bytearr; // Байтовое представление теста
-        static public BitArray bitarr; // Битовое представление теста
+        static public byte[] bytearr; // Байтовое представление исходного текста
+        static public BitArray bitarr; // Битовое представление модифицированного сообщения
+        static public byte[] bytearrnew; // Байтовое представление модифицированного сообщения из битов
     }
 }
