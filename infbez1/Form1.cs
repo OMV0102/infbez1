@@ -34,12 +34,12 @@ namespace infbez1
                     {
                         var_glob.bytearr = File.ReadAllBytes(var_glob.path);
                         var_glob.TextLength = var_glob.bytearr.Length;
-                        txt_in.Text = Encoding.Default.GetString(var_glob.bytearr).Replace('\0', ' ');
+                        txt_in.Text = Encoding.Default.GetString(var_glob.bytearr).Replace('\0', ' '); // КОДИРОВКААААААААААААААААААААААААААААААААААА
                     }
                     else
                     {
-                        var_glob.filetext = File.ReadAllText(var_glob.path, Encoding.Default);
-                        var_glob.bytearr = Encoding.Default.GetBytes(var_glob.filetext);
+                        var_glob.filetext = File.ReadAllText(var_glob.path, Encoding.Default); // КОДИРОВКААААААААААААААААААААААААААААААААААА
+                        var_glob.bytearr = Encoding.Default.GetBytes(var_glob.filetext);  // КОДИРОВКААААААААААААААААААААААААААААААААААА
                         var_glob.TextLength = var_glob.bytearr.Length;
                         txt_in.Text = var_glob.filetext;
                     }
@@ -75,10 +75,48 @@ namespace infbez1
                 var_glob.bytearrnew = new byte[var_glob.bitarr.Length/8]; // Исходный массив байтов до начала хэширования
                 var_glob.bitarr.CopyTo(var_glob.bytearrnew, 0); // из битов в байты
 
-                int t = var_glob.bytearrnew.Length / 512;
-
+                int t = var_glob.bytearrnew.Length / 64; // Количество блоков по 64 байта (512 бит)
                 // Дальше хэширования начинается
+                UInt64 A1, A2, B1, B2, C1, C2, D1, D2, T, h0, h1, h2, h3;
+                h0 = bitFunc.h0;
+                h1 = bitFunc.h1;
+                h2 = bitFunc.h2;
+                h3 = bitFunc.h3;
 
+                for (int i = 0; i < t; i++)
+                {
+                    A1 = h0;
+                    A2 = h0;
+                    B1 = h1;
+                    B2 = h1;
+                    C1 = h2;
+                    C2 = h2;
+                    D1 = h3;
+                    D2 = h3;
+
+                    for(int j = 0; j < 64; j++)
+                    {
+                        T = bitFunc.plus_mod2_in32(A1, B1);// AAAAAAAAAAAAA
+
+                        A1 = D1;
+                        D1 = C1;
+                        C1 = B1;
+                        B1 = T;
+
+                        T = 6; // AAAAAAAAAAAAA
+
+                        A2 = D2;
+                        D2 = C2;
+                        C2 = B2;
+                        B2 = T;
+                    }
+                    T = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h1, C1), D2);
+                    h1 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h2, D1), A2);
+                    h2 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h3, A1), B2);
+                    h3 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h0, B1), C2);
+                    h0 = T;
+
+                }
 
     }
             catch (Exception error)

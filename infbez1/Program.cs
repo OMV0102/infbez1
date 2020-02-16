@@ -27,20 +27,26 @@ namespace infbez1
     public static class bitFunc
     {
         // Начальные значения хеш-функции
-        public static UInt32 h0 = 0x67452301;
-        public static UInt32 h1 = 0xefcdab89;
-        public static UInt32 h2 = 0x98badcfe;
-        public static UInt32 h3 = 0x10325476;
+        public static UInt64 h0 = 0x67452301;
+        public static UInt64 h1 = 0xefcdab89;
+        public static UInt64 h2 = 0x98badcfe;
+        public static UInt64 h3 = 0x10325476;
 
         // циклический сдвиг влево на m бит
-        public static int shiftLeft(Byte b, int m)
+        public static UInt64 shiftLeft(UInt64 b, UInt64 m) // НЕ ЗАКОНЧЕНО
         {
-            
-
-
-            BitArray bit = new BitArray(b);
+            Int64 a = Convert.ToInt64(b);
+            string str = Convert.ToString(a, 2).PadLeft(64, '0');
+            //BitArray bit = new BitArray(b);
             return 1;
         }
+
+        public static UInt64 plus_mod2_in32(UInt64 a, UInt64 b)
+        {
+            UInt64 c = (a + b) % Convert.ToUInt64((Math.Pow(2,32)));
+            return c;
+        }
+
 
 
     }
@@ -128,9 +134,8 @@ namespace infbez1
         {
             int N = x.Length;
             int Nnew = 512;
-            string h = Convert.ToString(b, 2); // перевели в двоичную систему длину
-            string length_bin = new string('0',64 - h.Length); // определили недостающие спереди незначащие нули
-            length_bin += h; // приписали двоичное значение
+            string length_bin = Convert.ToString(b, 2).PadLeft(64,'0'); // перевели в двоичную систему длину
+
             // переконвертировали нули и единицы в "true" и "false"
             string[] length_bin_str = new string[64];
             for(int j = 0; j < 64; j++)
