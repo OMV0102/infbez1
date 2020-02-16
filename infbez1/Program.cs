@@ -22,13 +22,14 @@ namespace infbez1
         }
     }
 
-    
 
-    static public class bitfunc
+    // Класс с побитовыми операциями
+    public static class bitfunc
     {
+
+        // Дополняет дополнительные биты к битам текста для кратности длины = 448
         public static BitArray add_extra_bit(BitArray x)
         {
-            bool length_ok = false;
             int N = x.Length;
             int Nnew = 0;
             if (N % 512 < 448)
@@ -52,11 +53,34 @@ namespace infbez1
             return y;
         }
 
-        
+        // Дополняет биты длины исходного сообщения к битам текста до кратности длины = 512
+        public static BitArray add_length_bit(BitArray x, int b)
+        {
+            int N = x.Length;
+            int Nnew = 512; ;
+
+            BitArray y = new BitArray(Nnew);
+
+            // скопировали уже имеющийся биты
+            for (int j = 0; j < N; j++)
+            {
+                y[j] = x[j];
+            }
+
+            y[N] = true; // Добавляем бит 1
+            int i = N + 1;
+            while (i < Nnew) // Дополняются 0 биты до 448
+            {
+                y[i] = false;
+                i++;
+            }
+            return y;
+        }
 
     }
 
-    static public class endian
+    // Класс с сменой endian
+    public static class endian
     {
         // Переворачивает каждые 8 бит (каждый байт)
         // big -> little или little -> big endian
@@ -82,6 +106,8 @@ namespace infbez1
             return y;
         }
 
+        // Переворачивает каждые 32 битf (4 байта)
+        // из обычной последовательности 32 бит делает слово 
         public static BitArray each_4byte_negativ_endian(BitArray x)
         {
             BitArray y = new BitArray(x.Length);

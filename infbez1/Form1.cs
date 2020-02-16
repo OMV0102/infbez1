@@ -13,7 +13,7 @@ using System.Collections;
 //TODO сделать глобальную переменную под путь для всех файлов
 
 namespace infbez1
-{
+{ 
     public partial class Form1 : Form
     {
         public Form1()
@@ -21,35 +21,32 @@ namespace infbez1
             InitializeComponent();
         }
 
-        static bool isbinfile; // Флаг, тип входного файла
-        static string path; // Путь до выбранного файла
-        static public byte[] bytearr;
-        static public BitArray bitarr;
-
         // Если нажимаем на кнопку ПРОЧИТАТЬ
         private void btm_Rfile_text_Click(object sender, EventArgs e)
         {
-            string filetext = "";
-
+            var_glob.filetext = "";
+            
             if (txt_file_in.TextLength > 0)
             {
-                if (File.Exists(path) == true)
+                if (File.Exists(var_glob.path) == true)
                 {
-                    if (isbinfile == true)
+                    if (var_glob.isbinfile == true)
                     {
-                        bytearr = File.ReadAllBytes(path);
-                        txt_in.Text = Encoding.Default.GetString(bytearr).Replace('\0', ' ');
+                        var_glob.bytearr = File.ReadAllBytes(var_glob.path);
+                        var_glob.TextLength = var_glob.bytearr.Length;
+                        txt_in.Text = Encoding.Default.GetString(var_glob.bytearr).Replace('\0', ' ');
                     }
                     else
                     {
-                        filetext = File.ReadAllText(path, Encoding.Default);
-                        bytearr = Encoding.Default.GetBytes(filetext);
-                        txt_in.Text = filetext;
+                        var_glob.filetext = File.ReadAllText(var_glob.path, Encoding.Default);
+                        var_glob.bytearr = Encoding.Default.GetBytes(var_glob.filetext);
+                        var_glob.TextLength = var_glob.bytearr.Length;
+                        txt_in.Text = var_glob.filetext;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Файла \"" + path + "\" не существует!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Файла \"" + var_glob.path + "\" не существует!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -66,10 +63,11 @@ namespace infbez1
         {
             try
             {
-                bitarr = new BitArray(Form1.bytearr); // BitArray переделывает байты в биты little-endian
-                bitarr = endian.each_byte_negativ_endian(bitarr); // Конвертируем из полученных бит little-endian биты big-endian
-                bitarr = bitfunc.add_extra_bit(bitarr);
-                bitarr = endian.each_4byte_negativ_endian(bitarr);
+                var_glob.bitarr = new BitArray(var_glob.bytearr); // BitArray переделывает байты в биты little-endian
+                var_glob.bitarr = endian.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из полученных бит little-endian биты big-endian
+                var_glob.bitarr = bitfunc.add_extra_bit(var_glob.bitarr); // Добавляем доп. биты до длины кратной 448
+                var_glob.bitarr = endian.each_4byte_negativ_endian(var_glob.bitarr); // Конвертируем биты по 4 байта (1 слову) в биты little-endian
+                var_glob.bitarr = bitfunc.add_length_bit(var_glob.bitarr, var_glob.TextLength); // 
 
 
             }
@@ -119,13 +117,13 @@ namespace infbez1
                 int n = opf.SafeFileName.Length;
                 string ras = tmp[n - 3].ToString() + tmp[n - 2].ToString() + tmp[n - 1].ToString();
                 if (ras == "txt") //если расширение txt
-                    isbinfile = false; // файл обычный
+                    var_glob.isbinfile = false; // файл обычный
                 else
-                    isbinfile = true; // файл считаем как бинарный
+                    var_glob.isbinfile = true; // файл считаем как бинарный
 
                 // получаем путь С НАЗВАНИЕМ файла
-                path = opf.FileName;
-                txt_file_in.Text = path;
+                var_glob.path = opf.FileName;
+                txt_file_in.Text = var_glob.path;
             }
         }
 
@@ -134,5 +132,15 @@ namespace infbez1
         {
             label3.Text = txt_in.TextLength.ToString();
         }
+    }
+
+    public static class var_glob
+    {
+        static public bool isbinfile; // Флаг, тип входного файла
+        static public string path; // Путь до выбранного файла
+        static public string filetext; // Считанный текст сообщения
+        static public int TextLength; // Изначальный размер сообщения в байтах (1 символ = 1 байт)
+        static public byte[] bytearr; // Байтовое представление теста
+        static public BitArray bitarr; // Битовое представление теста
     }
 }
