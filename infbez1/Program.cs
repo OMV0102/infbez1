@@ -45,7 +45,7 @@ namespace infbez1
             
             y[N] = true; // Добавляем бит 1
             int i = N+1;
-            while(i < Nnew) // Дополняются 0 биты до 448
+            while(i < Nnew) // Дополняются нулевыми битами до 448
             {
                 y[i] = false;
                 i++;
@@ -57,7 +57,19 @@ namespace infbez1
         public static BitArray add_length_bit(BitArray x, int b)
         {
             int N = x.Length;
-            int Nnew = 512; ;
+            int Nnew = 512;
+            string h = Convert.ToString(b, 2); // перевели в двоичную систему длину
+            string length_bin = new string('0',64 - h.Length); // определили недостающие спереди незначащие нули
+            length_bin += h; // приписали двоичное значение
+            // переконвертировали нули и единицы в true и false
+            bool[] length_bin_bool = new bool[64];
+            for(int j = 0; j < 64; j++)
+            {
+                if (length_bin[j] == '0')
+                    length_bin_bool[j] = false;
+                else
+                    length_bin_bool[j] = true;
+            }
 
             BitArray y = new BitArray(Nnew);
 
@@ -66,14 +78,27 @@ namespace infbez1
             {
                 y[j] = x[j];
             }
-
-            y[N] = true; // Добавляем бит 1
-            int i = N + 1;
-            while (i < Nnew) // Дополняются 0 биты до 448
+            // Дополняем 448 бит до 512 битов двоичным представлением длины
+            int i = N;
+            int k = 48;
+            // дописываем младшие 4 байта (последние 16 бит)
+            bool bin_bool; ;
+            while (k < 64) 
             {
-                y[i] = false;
+                //y[i] = Boolean.TryParse(length_bin[k], out bin_bool);
                 i++;
+                k++;
             }
+            k = 0;
+            // дописываем с 1 до 48 бита
+            while (k < 48)
+            {
+               // y[i] = Convert.ToBoolean(Convert.ToInt16(length_bin[k]));
+                i++;
+                k++;
+            }
+
+
             return y;
         }
 
