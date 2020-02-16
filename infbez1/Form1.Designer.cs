@@ -42,10 +42,12 @@
             this.btn_choice_filein = new System.Windows.Forms.Button();
             this.btn_choice_fileout = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // txt_in
             // 
+            this.txt_in.BackColor = System.Drawing.SystemColors.Window;
             this.txt_in.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txt_in.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txt_in.Location = new System.Drawing.Point(12, 130);
@@ -60,9 +62,9 @@
             // txt_out
             // 
             this.txt_out.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txt_out.Location = new System.Drawing.Point(609, 130);
+            this.txt_out.Location = new System.Drawing.Point(765, 130);
             this.txt_out.Name = "txt_out";
-            this.txt_out.Size = new System.Drawing.Size(585, 220);
+            this.txt_out.Size = new System.Drawing.Size(429, 220);
             this.txt_out.TabIndex = 2;
             this.txt_out.TabStop = false;
             this.txt_out.Text = "";
@@ -96,6 +98,7 @@
             // 
             // txt_file_in
             // 
+            this.txt_file_in.BackColor = System.Drawing.SystemColors.Window;
             this.txt_file_in.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txt_file_in.Location = new System.Drawing.Point(16, 54);
             this.txt_file_in.Name = "txt_file_in";
@@ -118,7 +121,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(609, 28);
+            this.label2.Location = new System.Drawing.Point(770, 28);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(116, 19);
             this.label2.TabIndex = 9;
@@ -126,11 +129,12 @@
             // 
             // txt_file_out
             // 
+            this.txt_file_out.BackColor = System.Drawing.SystemColors.Window;
             this.txt_file_out.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txt_file_out.Location = new System.Drawing.Point(613, 54);
+            this.txt_file_out.Location = new System.Drawing.Point(765, 54);
             this.txt_file_out.Name = "txt_file_out";
             this.txt_file_out.ReadOnly = true;
-            this.txt_file_out.Size = new System.Drawing.Size(532, 27);
+            this.txt_file_out.Size = new System.Drawing.Size(380, 27);
             this.txt_file_out.TabIndex = 10;
             this.txt_file_out.TabStop = false;
             this.txt_file_out.Text = "out_text.txt";
@@ -162,7 +166,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label13.Location = new System.Drawing.Point(609, 108);
+            this.label13.Location = new System.Drawing.Point(770, 108);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(113, 19);
             this.label13.TabIndex = 39;
@@ -205,6 +209,16 @@
             this.label3.TabIndex = 42;
             this.label3.Text = "0";
             // 
+            // listBox1
+            // 
+            this.listBox1.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 19;
+            this.listBox1.Location = new System.Drawing.Point(616, 130);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(120, 80);
+            this.listBox1.TabIndex = 43;
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -213,6 +227,7 @@
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(1206, 612);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btn_choice_fileout);
             this.Controls.Add(this.btn_choice_filein);
@@ -254,6 +269,7 @@
         private System.Windows.Forms.Button btn_choice_filein;
         private System.Windows.Forms.Button btn_choice_fileout;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

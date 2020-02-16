@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections;
 
 //TODO сделать глобальную переменную под путь для всех файлов
 
@@ -22,7 +23,8 @@ namespace infbez1
 
         static bool isbinfile; // Флаг, тип входного файла
         static string path; // Путь до выбранного файла
-        byte[] bytearr;
+        static public byte[] bytearr;
+        static public BitArray bitarr;
 
         // Если нажимаем на кнопку ПРОЧИТАТЬ
         private void btm_Rfile_text_Click(object sender, EventArgs e)
@@ -43,7 +45,6 @@ namespace infbez1
                         filetext = File.ReadAllText(path, Encoding.Default);
                         bytearr = Encoding.Default.GetBytes(filetext);
                         txt_in.Text = filetext;
-                        
                     }
                 }
                 else
@@ -65,56 +66,22 @@ namespace infbez1
         {
             try
             {
-                //var m = new Algorithm_Shannon();
-                // Если какое то из полей не заполнено:
-                // исходный текст или символы алфавита или вероятности
-                if (txt_in.Text == "")
-                {
-                    MessageBox.Show("Не все поля заполнены данными!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                bitarr = new BitArray(Form1.bytearr); // BitArray переделывает байты в биты little-endian
+                bitarr = endian.each_byte_negativ_endian(bitarr); // Конвертируем из полученных бит little-endian биты big-endian
+                bitarr = bitfunc.add_extra_bit(bitarr);
+                bitarr = endian.each_4byte_negativ_endian(bitarr);
 
-                // Проверяем: сумма вероятностей была равна единице
-                //string[] tmp2 = txt_p.Text.Split(' ');  //Конвертируем вероятности из строки в массив
-                double p1 = 0.0;    // вероятность = 0
-                //складываем вероятности
-                //for (int i = 0; i < tmp2.GetLength(0); i++)
-                //    p1 += Convert.ToDouble(tmp2[i]);
 
-                if (Math.Abs( 1 - p1) >= CONST.EPS) // если вероятность в сумме НЕ 1 
-                {
-                    MessageBox.Show("Неверные данные.\nСумма вероятностей не равна 1 !", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                //Кодируем символы алфавита
-                //m.Encode_Symbols(txt_alph.Text, txt_p.Text);
-                
-                // Вывод кодов алфавита
-                //txt_code.Text = m.Show_Codes(); 
-
-                // Кодируем исходный текст и выводим его в (правое) поле
-                //txt_out.Text = m.Encode_text(txt_in.Text);
-
-                // Вывод средней длины кодового слова
-                //txt_average_length.Text = m.Average_Length();
-
-                // Вывод избыточности
-                //txt_redundancy.Text = m.Redundancy().ToString();
-
-                // Вывод выполняемости неравенства Крафта
-                //txt_inequality_kraft.Text = m.Check_Craft();
             }
             catch (Exception error)
             {
-                MessageBox.Show("Кодирование последовательности невозможно.\nПроверьте правильность входных данных!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Ошибка при хэшировании!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         // Если нажимаем на кнопку ЗАПИСАТЬ полученный ТЕКСТ
         private void btm_Wfile_text_Click(object sender, EventArgs e) 
         {
-            var n = new Methods();
             
             // Если не указано имя файла
             if (txt_file_out.Text == "") 
@@ -162,15 +129,10 @@ namespace infbez1
             }
         }
 
+        // подсчет байтов текста
         private void txt_in_TextChanged(object sender, EventArgs e)
         {
             label3.Text = txt_in.TextLength.ToString();
         }
-    }
-
-    static class CONST
-    {
-        //точность вычислений (абсолютная погрешность)
-        public static double EPS = 1e-8;
     }
 }
