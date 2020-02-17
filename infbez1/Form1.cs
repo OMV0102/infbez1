@@ -96,14 +96,20 @@ namespace infbez1
 
                     for(int j = 0; j < 64; j++)
                     {
-                        T = bitFunc.plus_mod2_in32(A1, B1);// AAAAAAAAAAAAA
+                        T = bitFunc.plus_mod2_in32(A1, bitFunc.f(j, B1, C1, D1));
+                        T = bitFunc.plus_mod2_in32(T, var_glob.bytearrnew[64*i+bitFunc.R1[j]]);
+                        T = bitFunc.plus_mod2_in32(T, bitFunc.K1(j));
+                        T = bitFunc.shiftLeft(T, bitFunc.S1[j]);
 
                         A1 = D1;
                         D1 = C1;
                         C1 = B1;
                         B1 = T;
 
-                        T = 6; // AAAAAAAAAAAAA
+                        T = bitFunc.plus_mod2_in32(A2, bitFunc.f(63-j, B2, C2, D2));
+                        T = bitFunc.plus_mod2_in32(T, var_glob.bytearrnew[64 * i + bitFunc.R2[j]]);
+                        T = bitFunc.plus_mod2_in32(T, bitFunc.K2(j));
+                        T = bitFunc.shiftLeft(T, bitFunc.S2[j]);
 
                         A2 = D2;
                         D2 = C2;
@@ -115,9 +121,8 @@ namespace infbez1
                     h2 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h3, A1), B2);
                     h3 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h0, B1), C2);
                     h0 = T;
-
                 }
-
+                bitFunc,
     }
             catch (Exception error)
             {
