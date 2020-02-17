@@ -106,6 +106,7 @@
             this.txt_file_in.Size = new System.Drawing.Size(532, 27);
             this.txt_file_in.TabIndex = 7;
             this.txt_file_in.TabStop = false;
+            this.txt_file_in.Text = "K:\\\\REPOS10\\\\infbez1\\\\infbez1\\\\bin\\\\Debug\\\\test_picture.jpg";
             // 
             // label1
             // 

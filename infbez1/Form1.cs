@@ -122,7 +122,7 @@ namespace infbez1
                     h3 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h0, B1), C2);
                     h0 = T;
                 }
-                bitFunc,
+                string res = bitFunc.result_concat(h0, h1, h2, h3);
     }
             catch (Exception error)
             {

@@ -181,7 +181,22 @@ namespace infbez1
                                               15, 5, 8, 11, 14, 14, 6, 14, 6, 9, 12, 9, 12, 5, 15, 8,
                                               8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11};
 
+        // Соединение результата и вывод в виде строки
+        public static string result_concat(UInt64 h0, UInt64 h1, UInt64 h2, UInt64 h3)
+        {
+            string res = "";
+            Int64 a;
+            a = Convert.ToInt64(h0);
+            res += Convert.ToString(a, 16).PadLeft(8, '0');
+            a = Convert.ToInt64(h1);
+            res += Convert.ToString(a, 16).PadLeft(8, '0');
+            a = Convert.ToInt64(h2);
+            res += Convert.ToString(a, 16).PadLeft(8, '0');
+            a = Convert.ToInt64(h3);
+            res += Convert.ToString(a, 16).PadLeft(8, '0');
 
+            return res;
+        }
     }
 
     // Класс преобразованием сообщения для дальнейшего хэширования
@@ -266,7 +281,7 @@ namespace infbez1
         public static BitArray add_length_bit(BitArray x, int b)
         {
             int N = x.Length;
-            int Nnew = 512;
+            int Nnew = (N/512)*512+512;
             string length_bin = Convert.ToString(b, 2).PadLeft(64,'0'); // перевели в двоичную систему длину
 
             // переконвертировали нули и единицы в "true" и "false"
