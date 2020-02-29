@@ -98,22 +98,24 @@ namespace infbez1
         private void btm_Wfile_text_Click(object sender, EventArgs e) 
         {
             
-            // Если не указано имя файла
-            if (txt_file_out.Text == "") 
-            {
-                MessageBox.Show("Не указано имя файла для записи полученного текста!!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            } 
-            
-            //Если поле с полученным текстом пустое
+            //Если поле с хэш-функцией пустое
             if (txt_out.Text == "") 
             {
-                MessageBox.Show("Запись текста невозможна.\nПоле с текстом пустое!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Поле с хеш-функцией пустое!\nСначала получите хеш.", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            saveFileDialog1.InitialDirectory = Application.StartupPath; 
+            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            // получаем выбранный файл
+            string filename = saveFileDialog1.FileName;
+            // сохраняем текст в файл
+            System.IO.File.WriteAllText(filename, txt_out.Text);
+            MessageBox.Show("Файл сохранен");
+
             // вызов функции, которая записывает текст
-            //n.Text_Save(txt_file_out.Text, txt_out.Text); 
             MessageBox.Show("Полученный текст записан в файл.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
 
         }
 
@@ -155,94 +157,67 @@ namespace infbez1
         // кнопка ИССЛЕДОВАТЬ 
         private void btn_analyz_Click(object sender, EventArgs e)
         {
-            if (txt_in.Text.Length > 512)
+            try
             {
-                MessageBox.Show("Длина сообщения для проверки лавинного эффекта должна быть не больше 512 бит (64 символа)!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (txt_in.Text.Length > 512)
+                {
+                    MessageBox.Show("Длина сообщения для проверки лавинного эффекта должна быть не больше 512 бит (64 символа)!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    var_glob.bitMod = new string[64];
+                    var_glob.bitNorm = new string[64];
+                    var_glob.diffBitCount = new int[64];
+
+                    if (var_glob.isbinfile == false)
+                    {
+                        var_glob.bytearr = Encoding.Default.GetBytes(txt_in.Text);  // Кодировка ANSI
+                    }
+
+                    var_glob.bitarr = new BitArray(var_glob.bytearr); // BitArray переделывает байты в биты little-endian
+                    var_glob.bitarr = messageTransform.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из полученных бит little-endian биты big-endian
+                                                                                                  // 1 шаг
+                    var_glob.bitarr = messageTransform.add_extra_bit(var_glob.bitarr); // Добавляем доп. биты до длины кратной 448
+                    var_glob.bitarr = messageTransform.each_4byte_negativ_endian(var_glob.bitarr); // Конвертируем биты по 4 байта (1 слову) в биты little-endian
+                                                                                                   // 2 шаг
+                    var_glob.bitarr = messageTransform.add_length_bit(var_glob.bitarr, var_glob.TextLength); // Добавили двоичное представление длины исходного текста
+                    var_glob.bitarr = messageTransform.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из бит big-endian в little-endian, т.к. битово-байтовая конвертация идет как little-endian
+
+                    // нашли хеш для исходного
+                    var_glob.bytearrnew = new byte[var_glob.bitarr.Length / 8]; // Исходный массив байтов до начала хэширования
+                    var_glob.bitarr.CopyTo(var_glob.bytearrnew, 0); // из битов в байты
+                    bitFunc.hesh_modified(false);
+
+                    // нашли хеш для измененного с одном битом
+                    var_glob.bitarr[(Int32)numeric.Value] = bitFunc.negativBit(var_glob.bitarr[(Int32)numeric.Value]);
+                    var_glob.bytearrnew = new byte[var_glob.bitarr.Length / 8];
+                    bitFunc.hesh_modified(true);
+
+                    //сравниваем хеши  при кажом раунде
+                    for (int i = 0; i < 64; i++)
+                    {
+                        var_glob.diffBitCount[i] = bitFunc.diffBitCount(var_glob.bitNorm[i], var_glob.bitMod[i]);
+                    }
+                    btn_plot_Click(null, null);
+
+                }
             }
-            else
+            catch (Exception error)
             {
-                var_glob.bitMod = new string[64];
-                var_glob.bitNorm = new string[64];
-                var_glob.diffBitCount = new int[64];
-
-                if (var_glob.isbinfile == false)
-                {
-                    var_glob.bytearr = Encoding.Default.GetBytes(txt_in.Text);  // Кодировка ANSI
-                }
-
-                var_glob.bitarr = new BitArray(var_glob.bytearr); // BitArray переделывает байты в биты little-endian
-                var_glob.bitarr = messageTransform.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из полученных бит little-endian биты big-endian
-                                                                                              // 1 шаг
-                var_glob.bitarr = messageTransform.add_extra_bit(var_glob.bitarr); // Добавляем доп. биты до длины кратной 448
-                var_glob.bitarr = messageTransform.each_4byte_negativ_endian(var_glob.bitarr); // Конвертируем биты по 4 байта (1 слову) в биты little-endian
-                                                                                               // 2 шаг
-                var_glob.bitarr = messageTransform.add_length_bit(var_glob.bitarr, var_glob.TextLength); // Добавили двоичное представление длины исходного текста
-                var_glob.bitarr = messageTransform.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из бит big-endian в little-endian, т.к. битово-байтовая конвертация идет как little-endian
-
-                // нашли хеш для исходного
-                var_glob.bytearrnew = new byte[var_glob.bitarr.Length / 8]; // Исходный массив байтов до начала хэширования
-                var_glob.bitarr.CopyTo(var_glob.bytearrnew, 0); // из битов в байты
-                bitFunc.hesh_modified(false);
-
-                // нашли хеш для измененного с одном битом
-                var_glob.bitarr[(Int32)numeric.Value] = bitFunc.negativBit(var_glob.bitarr[(Int32)numeric.Value]);
-                var_glob.bytearrnew = new byte[var_glob.bitarr.Length / 8];
-                bitFunc.hesh_modified(true);
-
-                //сравниваем хеши  при кажом раунде
-                for(int i = 0; i < 64; i++)
-                {
-                    var_glob.diffBitCount[i] = bitFunc.diffBitCount(var_glob.bitNorm[i], var_glob.bitMod[i]);
-                }
-
-                Form1 n = new Form1();
-                n.plot();
-
-
+                MessageBox.Show("Неопознанная ошибка!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public void plot()
+        private void btn_plot_Click(object sender, EventArgs e)
         {
+            chart1.Series[0].Points.Clear();
 
-
-            //добавляем в Chart область для рисования графиков, их может быть
-            //много, поэтому даем ей имя.
-            chart1.ChartAreas.Add(new ChartArea("bit"));
-            //Создаем и настраиваем набор точек для рисования графика, в том
-            //не забыв указать имя области на которой хотим отобразить этот
-            //набор точек.
-            Series mySeriesOfPoint = new Series("bit_point");
-            mySeriesOfPoint.ChartType = SeriesChartType.Line;
-            mySeriesOfPoint.ChartArea = "bit";
-            for (double x = -Math.PI; x <= Math.PI; x += Math.PI / 10.0)
-            {
-                mySeriesOfPoint.Points.AddXY(x, Math.Sin(x));
-            }
-            //Добавляем созданный набор точек в Chart
-            chart1.Series.Add(mySeriesOfPoint);
-
-
-            /*
-            chart1.Series.Clear();
-
-            // Add series.
             for (int i = 0; i < 64; i++)
             {
-                // Add series.
-                //chart1.Series.Add(seriesArray[i].ToString()); // chart1.Series.Add(i.ToString());
-                chart1.Series.Add(i.ToString());
-                
-
-                //chart1.Series[0].Points.AddXY(i + 1, pointsArray[i]);
                 chart1.Series[0].Points.AddXY(i + 1, var_glob.diffBitCount[i]);
 
             }
-            chart1.Series[0].ChartType = SeriesChartType.Line;
-            chart1.Legends.Clear();
-            */
         }
-
     }
 
     public static class var_glob

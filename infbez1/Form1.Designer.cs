@@ -28,28 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.txt_in = new System.Windows.Forms.RichTextBox();
             this.txt_out = new System.Windows.Forms.RichTextBox();
             this.btm_coding = new System.Windows.Forms.Button();
             this.btm_Rfile_text = new System.Windows.Forms.Button();
             this.txt_file_in = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txt_file_out = new System.Windows.Forms.TextBox();
             this.btm_Wfile_text = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.btn_choice_filein = new System.Windows.Forms.Button();
-            this.btn_choice_fileout = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.numeric = new System.Windows.Forms.NumericUpDown();
             this.btn_analyz = new System.Windows.Forms.Button();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.btn_plot = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.numeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
@@ -70,9 +69,11 @@
             // 
             // txt_out
             // 
+            this.txt_out.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.txt_out.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txt_out.Location = new System.Drawing.Point(148, 364);
+            this.txt_out.Location = new System.Drawing.Point(154, 298);
             this.txt_out.Name = "txt_out";
+            this.txt_out.ReadOnly = true;
             this.txt_out.Size = new System.Drawing.Size(293, 31);
             this.txt_out.TabIndex = 2;
             this.txt_out.TabStop = false;
@@ -126,34 +127,13 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Файл с исходным текстом:";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(17, 301);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 19);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Файл с хэшем:";
-            // 
-            // txt_file_out
-            // 
-            this.txt_file_out.BackColor = System.Drawing.SystemColors.Window;
-            this.txt_file_out.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txt_file_out.Location = new System.Drawing.Point(20, 327);
-            this.txt_file_out.Name = "txt_file_out";
-            this.txt_file_out.ReadOnly = true;
-            this.txt_file_out.Size = new System.Drawing.Size(536, 27);
-            this.txt_file_out.TabIndex = 10;
-            this.txt_file_out.TabStop = false;
-            // 
             // btm_Wfile_text
             // 
             this.btm_Wfile_text.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btm_Wfile_text.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btm_Wfile_text.Location = new System.Drawing.Point(427, 297);
+            this.btm_Wfile_text.Location = new System.Drawing.Point(453, 297);
             this.btm_Wfile_text.Name = "btm_Wfile_text";
-            this.btm_Wfile_text.Size = new System.Drawing.Size(178, 27);
+            this.btm_Wfile_text.Size = new System.Drawing.Size(152, 27);
             this.btm_Wfile_text.TabIndex = 11;
             this.btm_Wfile_text.TabStop = false;
             this.btm_Wfile_text.Text = "Записать в файл";
@@ -174,7 +154,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label13.Location = new System.Drawing.Point(29, 364);
+            this.label13.Location = new System.Drawing.Point(35, 298);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(113, 19);
             this.label13.TabIndex = 39;
@@ -194,19 +174,6 @@
             this.btn_choice_filein.UseVisualStyleBackColor = true;
             this.btn_choice_filein.Click += new System.EventHandler(this.btn_choice_filein_Click);
             // 
-            // btn_choice_fileout
-            // 
-            this.btn_choice_fileout.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btn_choice_fileout.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btn_choice_fileout.Location = new System.Drawing.Point(562, 326);
-            this.btn_choice_fileout.Name = "btn_choice_fileout";
-            this.btn_choice_fileout.Size = new System.Drawing.Size(43, 27);
-            this.btn_choice_fileout.TabIndex = 41;
-            this.btn_choice_fileout.TabStop = false;
-            this.btn_choice_fileout.Tag = "";
-            this.btn_choice_fileout.Text = ". . .";
-            this.btn_choice_fileout.UseVisualStyleBackColor = true;
-            // 
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -224,7 +191,7 @@
             this.label4.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label4.Location = new System.Drawing.Point(12, 289);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(602, 118);
+            this.label4.Size = new System.Drawing.Size(602, 52);
             this.label4.TabIndex = 43;
             // 
             // label5
@@ -232,22 +199,22 @@
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label5.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(12, 412);
+            this.label5.Location = new System.Drawing.Point(12, 351);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(602, 239);
+            this.label5.Size = new System.Drawing.Size(602, 300);
             this.label5.TabIndex = 44;
             // 
             // numeric
             // 
-            this.numeric.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numeric.Location = new System.Drawing.Point(65, 466);
+            this.numeric.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.numeric.Location = new System.Drawing.Point(61, 428);
             this.numeric.Maximum = new decimal(new int[] {
             511,
             0,
             0,
             0});
             this.numeric.Name = "numeric";
-            this.numeric.Size = new System.Drawing.Size(77, 26);
+            this.numeric.Size = new System.Drawing.Size(77, 29);
             this.numeric.TabIndex = 46;
             this.numeric.TabStop = false;
             this.numeric.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -256,7 +223,7 @@
             // 
             this.btn_analyz.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_analyz.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btn_analyz.Location = new System.Drawing.Point(45, 542);
+            this.btn_analyz.Location = new System.Drawing.Point(29, 512);
             this.btn_analyz.Name = "btn_analyz";
             this.btn_analyz.Size = new System.Drawing.Size(128, 50);
             this.btn_analyz.TabIndex = 47;
@@ -267,19 +234,39 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(305, 426);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            this.chart1.Location = new System.Drawing.Point(179, 368);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(300, 203);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
+            this.chart1.Size = new System.Drawing.Size(426, 261);
             this.chart1.TabIndex = 48;
             this.chart1.Text = "chart1";
+            title2.Name = "Title1";
+            title2.Text = "График";
+            this.chart1.Titles.Add(title2);
+            // 
+            // btn_plot
+            // 
+            this.btn_plot.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_plot.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btn_plot.Location = new System.Drawing.Point(61, 593);
+            this.btn_plot.Name = "btn_plot";
+            this.btn_plot.Size = new System.Drawing.Size(81, 36);
+            this.btn_plot.TabIndex = 49;
+            this.btn_plot.TabStop = false;
+            this.btn_plot.Text = "График";
+            this.btn_plot.UseVisualStyleBackColor = true;
+            this.btn_plot.Visible = false;
+            this.btn_plot.Click += new System.EventHandler(this.btn_plot_Click);
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "Text files(*.txt)|*.txt";
+            this.saveFileDialog1.Title = "Сохранить хеш в файл...";
             // 
             // Form1
             // 
@@ -289,16 +276,14 @@
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(631, 660);
+            this.Controls.Add(this.btn_plot);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.btn_analyz);
             this.Controls.Add(this.numeric);
-            this.Controls.Add(this.btn_choice_fileout);
             this.Controls.Add(this.btn_choice_filein);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.btm_Wfile_text);
-            this.Controls.Add(this.txt_file_out);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txt_file_in);
             this.Controls.Add(this.btm_Rfile_text);
@@ -330,19 +315,18 @@
         private System.Windows.Forms.Button btm_Rfile_text;
         private System.Windows.Forms.TextBox txt_file_in;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txt_file_out;
         private System.Windows.Forms.Button btm_Wfile_text;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btn_choice_filein;
-        private System.Windows.Forms.Button btn_choice_fileout;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numeric;
         private System.Windows.Forms.Button btn_analyz;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button btn_plot;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

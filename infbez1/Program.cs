@@ -33,10 +33,9 @@ namespace infbez1
         public static UInt32 h3 = 0x10325476;
 
         // Циклический сдвиг влево на m бит
-        public static UInt32 shiftLeft(UInt32 b, UInt32 m) // НЕ ЗАКОНЧЕНО
+        public static UInt32 shiftLeft(UInt32 b, UInt32 m)
         {
-            UInt32 a = Convert.ToUInt32(b);
-            string a_str = Convert.ToString(a, 2).PadLeft(64, '0'); // Перевели число в двоичное в строку
+            string a_str = Convert.ToString(b, 2).PadLeft(32, '0'); // Перевели число в двоичное в строку
 
             string b_str = a_str.Substring((int)m);
             b_str += a_str.Remove((int)m);
@@ -47,7 +46,7 @@ namespace infbez1
         }
 
         // перевод из двоичного числа (строки) в число десятичное
-        public static UInt32 binToDec(string bin)  //  НЕПРАВИЛЬНО
+        public static UInt32 binToDec(string bin) 
         {
             UInt32 result = 0;
             int N = bin.Length;
@@ -74,7 +73,7 @@ namespace infbez1
             UInt32 res = 0;
             if ((j> 0 && j < 15) || j == 0 || j == 15)
             {
-                res = (x ^ y) ^ z;
+                res = x ^ y ^ z;
             }
             else if ((j > 16 && j < 31) || j == 16 || j == 31)
             {
@@ -235,7 +234,7 @@ namespace infbez1
             int count = 0;
             for(int i = 0; i < 128; i++)
             {
-                if (a[i] == b[i])
+                if (a[i] != b[i])
                     count++;
             }
 
@@ -418,8 +417,14 @@ namespace infbez1
         {
             int N = x.Length;
             int Nnew = 0;
-            if (N % 512 < 448)
-                Nnew = N + 448 - (N % 512);
+
+            if (N <= 447)
+                Nnew = 448;
+            else if(N > 447)
+            {
+                Nnew = N + 448 - (N % 448);
+            }
+
 
             BitArray y = new BitArray(Nnew);
 
