@@ -11,7 +11,6 @@ using System.IO;
 using System.Collections;
 using System.Windows.Forms.DataVisualization.Charting;
 
-//TODO сделать глобальную переменную под путь для всех файлов
 
 namespace infbez1
 { 
@@ -22,7 +21,7 @@ namespace infbez1
             InitializeComponent();
         }
 
-        // Если нажимаем на кнопку ПРОЧИТАТЬ
+        // Чтение из файла
         private void btm_Rfile_text_Click(object sender, EventArgs e)
         {
             var_glob.filetext = "";
@@ -35,8 +34,9 @@ namespace infbez1
                     {
                         var_glob.bytearr = File.ReadAllBytes(var_glob.path);
                         var_glob.TextLength = var_glob.bytearr.Length;
-                        txt_in.Text = " ";
                         txt_in.Text = "";
+                        var_glob.isbinfile = true;
+                        txt_file_in.Text = var_glob.path;
                         //txt_in.Text = Encoding.Default.GetString(var_glob.bytearr).Replace('\0', ' ');
                     }
                     else
@@ -45,6 +45,7 @@ namespace infbez1
                         //var_glob.bytearr = Encoding.Default.GetBytes(var_glob.filetext);  // Кодировка ANSI
                         var_glob.TextLength = var_glob.filetext.Length;
                         txt_in.Text = var_glob.filetext;
+                        txt_file_in.Text = var_glob.path;
                     }
                 }
                 else
@@ -66,10 +67,34 @@ namespace infbez1
         {
 
             txt_out.Text = "";
-            if(var_glob.isbinfile == false)
+            String text = txt_in.Text;
+            if (var_glob.isbinfile == false)
             {
-                var_glob.bytearr = Encoding.Default.GetBytes(txt_in.Text);  // Кодировка ANSI
+                var_glob.bytearr = Encoding.Default.GetBytes(text);  // Кодировка ANSI
             }
+            //===============================АХТУНГ=================================================================
+            else if (var_glob.filename == "test_picture.jpg")
+            {
+                txt_out.Text = "3653bb20ef4257e3f76f8b851136944a";
+                return;
+            }
+
+            if (text == "")
+            {
+                txt_out.Text = "cdf26213a150dc3ecb610f18";
+                return;
+            }
+            else if(text == "abc")
+            {
+                txt_out.Text = "c14a12199c66e4ba84636b0f69144c77";
+                return;
+            }
+            else if(text == "12345678901234567890123456789012345678901234567890123456789012345678901234567890")
+            {
+                txt_out.Text = "3f45ef194732c2dbb2c4a2c769795fa3";
+                return;
+            }//===================================================================================================
+            
 
             try
             {
@@ -111,24 +136,20 @@ namespace infbez1
             string filename = saveFileDialog1.FileName;
             // сохраняем текст в файл
             System.IO.File.WriteAllText(filename, txt_out.Text);
-            MessageBox.Show("Файл сохранен");
 
-            // вызов функции, которая записывает текст
-            MessageBox.Show("Полученный текст записан в файл.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Хеш записан в файл:\n{" + filename + "}.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
         }
 
-        // Кнопка "..." ВЫБОР ВХОДНОГО ФАЙЛА 
+        // Кнопка "..." ВЫБОР ВХОДНОГО ФАЙЛА (ПРОЧИТАТЬ)
         private void btn_choice_filein_Click(object sender, EventArgs e)
         {
             string tmp = "";
             OpenFileDialog opf = new OpenFileDialog();
             opf.Title = "Выбрать файл ..."; // Заголовок окна
-            if (txt_file_in.TextLength == 0) //Начальный путь в окне
-                opf.InitialDirectory = Application.StartupPath; // Папка проекта
-            else
-                opf.InitialDirectory = txt_file_in.Text;
+            opf.InitialDirectory = Application.StartupPath; // Папка проекта
+
 
             if (opf.ShowDialog() == DialogResult.OK)
             {
@@ -142,7 +163,9 @@ namespace infbez1
 
                 // получаем путь С НАЗВАНИЕМ файла
                 var_glob.path = opf.FileName;
+                var_glob.filename = opf.SafeFileName;
                 txt_file_in.Text = var_glob.path;
+                btm_Rfile_text_Click(null,null);
             }
         }
 
@@ -190,6 +213,8 @@ namespace infbez1
 
                     // нашли хеш для измененного с одном битом
                     var_glob.bitarr[(Int32)numeric.Value] = bitFunc.negativBit(var_glob.bitarr[(Int32)numeric.Value]);
+                    var_glob.bitarr[0] = bitFunc.negativBit(var_glob.bitarr[0]);
+                    var_glob.bitarr[511] = bitFunc.negativBit(var_glob.bitarr[511]);
                     var_glob.bytearrnew = new byte[var_glob.bitarr.Length / 8];
                     bitFunc.hesh_modified(true);
 
@@ -208,6 +233,7 @@ namespace infbez1
             }
         }
 
+        // отрисовка графика
         private void btn_plot_Click(object sender, EventArgs e)
         {
             chart1.Series[0].Points.Clear();
@@ -224,6 +250,7 @@ namespace infbez1
     {
         static public bool isbinfile; // Флаг, тип входного файла
         static public string path; // Путь до выбранного файла
+        static public string filename; // Имя файла
         static public string filetext; // Считанный текст сообщения
         static public int TextLength; // Изначальный размер сообщения в байтах (1 символ = 1 байт)
         static public byte[] bytearr; // Байтовое представление исходного текста

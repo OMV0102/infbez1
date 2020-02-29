@@ -243,7 +243,6 @@ namespace infbez1
             return count;
         }
 
-
         // Основной цикл алгоритма хэширования
         public static string hesh()
         {

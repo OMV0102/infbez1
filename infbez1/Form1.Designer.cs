@@ -96,14 +96,15 @@
             // 
             this.btm_Rfile_text.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btm_Rfile_text.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btm_Rfile_text.Location = new System.Drawing.Point(430, 20);
+            this.btm_Rfile_text.Location = new System.Drawing.Point(430, 87);
             this.btm_Rfile_text.Name = "btm_Rfile_text";
             this.btm_Rfile_text.Size = new System.Drawing.Size(175, 27);
             this.btm_Rfile_text.TabIndex = 6;
             this.btm_Rfile_text.TabStop = false;
             this.btm_Rfile_text.Tag = "";
-            this.btm_Rfile_text.Text = "Прочитать файл";
+            this.btm_Rfile_text.Text = "Чтение";
             this.btm_Rfile_text.UseVisualStyleBackColor = true;
+            this.btm_Rfile_text.Visible = false;
             this.btm_Rfile_text.Click += new System.EventHandler(this.btm_Rfile_text_Click);
             // 
             // txt_file_in
@@ -113,7 +114,7 @@
             this.txt_file_in.Location = new System.Drawing.Point(24, 54);
             this.txt_file_in.Name = "txt_file_in";
             this.txt_file_in.ReadOnly = true;
-            this.txt_file_in.Size = new System.Drawing.Size(532, 27);
+            this.txt_file_in.Size = new System.Drawing.Size(581, 27);
             this.txt_file_in.TabIndex = 7;
             this.txt_file_in.TabStop = false;
             // 
@@ -164,13 +165,13 @@
             // 
             this.btn_choice_filein.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btn_choice_filein.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btn_choice_filein.Location = new System.Drawing.Point(562, 54);
+            this.btn_choice_filein.Location = new System.Drawing.Point(439, 20);
             this.btn_choice_filein.Name = "btn_choice_filein";
-            this.btn_choice_filein.Size = new System.Drawing.Size(43, 27);
+            this.btn_choice_filein.Size = new System.Drawing.Size(160, 27);
             this.btn_choice_filein.TabIndex = 40;
             this.btn_choice_filein.TabStop = false;
             this.btn_choice_filein.Tag = "";
-            this.btn_choice_filein.Text = ". . .";
+            this.btn_choice_filein.Text = "Прочитать файл";
             this.btn_choice_filein.UseVisualStyleBackColor = true;
             this.btn_choice_filein.Click += new System.EventHandler(this.btn_choice_filein_Click);
             // 
