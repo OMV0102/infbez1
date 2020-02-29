@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Collections;
+using System.Windows.Forms.DataVisualization.Charting;
 
 //TODO сделать глобальную переменную под путь для всех файлов
 
@@ -34,13 +35,15 @@ namespace infbez1
                     {
                         var_glob.bytearr = File.ReadAllBytes(var_glob.path);
                         var_glob.TextLength = var_glob.bytearr.Length;
-                        txt_in.Text = Encoding.Default.GetString(var_glob.bytearr).Replace('\0', ' '); // КОДИРОВКААААААААААААААААААААААААААААААААААА
+                        txt_in.Text = " ";
+                        txt_in.Text = "";
+                        //txt_in.Text = Encoding.Default.GetString(var_glob.bytearr).Replace('\0', ' ');
                     }
                     else
                     {
-                        var_glob.filetext = File.ReadAllText(var_glob.path, Encoding.Default); // КОДИРОВКААААААААААААААААААААААААААААААААААА
-                        var_glob.bytearr = Encoding.Default.GetBytes(var_glob.filetext);  // КОДИРОВКААААААААААААААААААААААААААААААААААА
-                        var_glob.TextLength = var_glob.bytearr.Length;
+                        var_glob.filetext = File.ReadAllText(var_glob.path, Encoding.Default); // Кодировка ANSI
+                        //var_glob.bytearr = Encoding.Default.GetBytes(var_glob.filetext);  // Кодировка ANSI
+                        var_glob.TextLength = var_glob.filetext.Length;
                         txt_in.Text = var_glob.filetext;
                     }
                 }
@@ -61,6 +64,13 @@ namespace infbez1
         // Если нажимаем на кнопку ХЭШИРОВАТЬ
         private void btm_coding_Click(object sender, EventArgs e) 
         {
+
+            txt_out.Text = "";
+            if(var_glob.isbinfile == false)
+            {
+                var_glob.bytearr = Encoding.Default.GetBytes(txt_in.Text);  // Кодировка ANSI
+            }
+
             try
             {
                 var_glob.bitarr = new BitArray(var_glob.bytearr); // BitArray переделывает байты в биты little-endian
@@ -75,55 +85,9 @@ namespace infbez1
                 var_glob.bytearrnew = new byte[var_glob.bitarr.Length/8]; // Исходный массив байтов до начала хэширования
                 var_glob.bitarr.CopyTo(var_glob.bytearrnew, 0); // из битов в байты
 
-                int t = var_glob.bytearrnew.Length / 64; // Количество блоков по 64 байта (512 бит)
-                // Дальше хэширования начинается
-                UInt64 A1, A2, B1, B2, C1, C2, D1, D2, T, h0, h1, h2, h3;
-                h0 = bitFunc.h0;
-                h1 = bitFunc.h1;
-                h2 = bitFunc.h2;
-                h3 = bitFunc.h3;
-
-                for (int i = 0; i < t; i++)
-                {
-                    A1 = h0;
-                    A2 = h0;
-                    B1 = h1;
-                    B2 = h1;
-                    C1 = h2;
-                    C2 = h2;
-                    D1 = h3;
-                    D2 = h3;
-
-                    for(int j = 0; j < 64; j++)
-                    {
-                        T = bitFunc.plus_mod2_in32(A1, bitFunc.f(j, B1, C1, D1));
-                        T = bitFunc.plus_mod2_in32(T, var_glob.bytearrnew[64*i+bitFunc.R1[j]]);
-                        T = bitFunc.plus_mod2_in32(T, bitFunc.K1(j));
-                        T = bitFunc.shiftLeft(T, bitFunc.S1[j]);
-
-                        A1 = D1;
-                        D1 = C1;
-                        C1 = B1;
-                        B1 = T;
-
-                        T = bitFunc.plus_mod2_in32(A2, bitFunc.f(63-j, B2, C2, D2));
-                        T = bitFunc.plus_mod2_in32(T, var_glob.bytearrnew[64 * i + bitFunc.R2[j]]);
-                        T = bitFunc.plus_mod2_in32(T, bitFunc.K2(j));
-                        T = bitFunc.shiftLeft(T, bitFunc.S2[j]);
-
-                        A2 = D2;
-                        D2 = C2;
-                        C2 = B2;
-                        B2 = T;
-                    }
-                    T = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h1, C1), D2);
-                    h1 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h2, D1), A2);
-                    h2 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h3, A1), B2);
-                    h3 = bitFunc.plus_mod2_in32(bitFunc.plus_mod2_in32(h0, B1), C2);
-                    h0 = T;
-                }
-                string res = bitFunc.result_concat(h0, h1, h2, h3);
-    }
+                string res = bitFunc.hesh();
+                txt_out.Text = res;
+            }
             catch (Exception error)
             {
                 MessageBox.Show("Ошибка при хэшировании!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -180,11 +144,105 @@ namespace infbez1
             }
         }
 
-        // подсчет байтов текста
+        // изменяем текст
         private void txt_in_TextChanged(object sender, EventArgs e)
         {
-            label3.Text = txt_in.TextLength.ToString();
+            var_glob.isbinfile = false;
+            txt_file_in.Text = "";
+
         }
+
+        // кнопка ИССЛЕДОВАТЬ 
+        private void btn_analyz_Click(object sender, EventArgs e)
+        {
+            if (txt_in.Text.Length > 512)
+            {
+                MessageBox.Show("Длина сообщения для проверки лавинного эффекта должна быть не больше 512 бит (64 символа)!", " Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                var_glob.bitMod = new string[64];
+                var_glob.bitNorm = new string[64];
+                var_glob.diffBitCount = new int[64];
+
+                if (var_glob.isbinfile == false)
+                {
+                    var_glob.bytearr = Encoding.Default.GetBytes(txt_in.Text);  // Кодировка ANSI
+                }
+
+                var_glob.bitarr = new BitArray(var_glob.bytearr); // BitArray переделывает байты в биты little-endian
+                var_glob.bitarr = messageTransform.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из полученных бит little-endian биты big-endian
+                                                                                              // 1 шаг
+                var_glob.bitarr = messageTransform.add_extra_bit(var_glob.bitarr); // Добавляем доп. биты до длины кратной 448
+                var_glob.bitarr = messageTransform.each_4byte_negativ_endian(var_glob.bitarr); // Конвертируем биты по 4 байта (1 слову) в биты little-endian
+                                                                                               // 2 шаг
+                var_glob.bitarr = messageTransform.add_length_bit(var_glob.bitarr, var_glob.TextLength); // Добавили двоичное представление длины исходного текста
+                var_glob.bitarr = messageTransform.each_byte_negativ_endian(var_glob.bitarr); // Конвертируем из бит big-endian в little-endian, т.к. битово-байтовая конвертация идет как little-endian
+
+                // нашли хеш для исходного
+                var_glob.bytearrnew = new byte[var_glob.bitarr.Length / 8]; // Исходный массив байтов до начала хэширования
+                var_glob.bitarr.CopyTo(var_glob.bytearrnew, 0); // из битов в байты
+                bitFunc.hesh_modified(false);
+
+                // нашли хеш для измененного с одном битом
+                var_glob.bitarr[(Int32)numeric.Value] = bitFunc.negativBit(var_glob.bitarr[(Int32)numeric.Value]);
+                var_glob.bytearrnew = new byte[var_glob.bitarr.Length / 8];
+                bitFunc.hesh_modified(true);
+
+                //сравниваем хеши  при кажом раунде
+                for(int i = 0; i < 64; i++)
+                {
+                    var_glob.diffBitCount[i] = bitFunc.diffBitCount(var_glob.bitNorm[i], var_glob.bitMod[i]);
+                }
+
+                Form1 n = new Form1();
+                n.plot();
+
+
+            }
+        }
+
+        public void plot()
+        {
+
+
+            //добавляем в Chart область для рисования графиков, их может быть
+            //много, поэтому даем ей имя.
+            chart1.ChartAreas.Add(new ChartArea("bit"));
+            //Создаем и настраиваем набор точек для рисования графика, в том
+            //не забыв указать имя области на которой хотим отобразить этот
+            //набор точек.
+            Series mySeriesOfPoint = new Series("bit_point");
+            mySeriesOfPoint.ChartType = SeriesChartType.Line;
+            mySeriesOfPoint.ChartArea = "bit";
+            for (double x = -Math.PI; x <= Math.PI; x += Math.PI / 10.0)
+            {
+                mySeriesOfPoint.Points.AddXY(x, Math.Sin(x));
+            }
+            //Добавляем созданный набор точек в Chart
+            chart1.Series.Add(mySeriesOfPoint);
+
+
+            /*
+            chart1.Series.Clear();
+
+            // Add series.
+            for (int i = 0; i < 64; i++)
+            {
+                // Add series.
+                //chart1.Series.Add(seriesArray[i].ToString()); // chart1.Series.Add(i.ToString());
+                chart1.Series.Add(i.ToString());
+                
+
+                //chart1.Series[0].Points.AddXY(i + 1, pointsArray[i]);
+                chart1.Series[0].Points.AddXY(i + 1, var_glob.diffBitCount[i]);
+
+            }
+            chart1.Series[0].ChartType = SeriesChartType.Line;
+            chart1.Legends.Clear();
+            */
+        }
+
     }
 
     public static class var_glob
@@ -196,5 +254,11 @@ namespace infbez1
         static public byte[] bytearr; // Байтовое представление исходного текста
         static public BitArray bitarr; // Битовое представление модифицированного сообщения
         static public byte[] bytearrnew; // Байтовое представление модифицированного сообщения из битов
+
+
+        public static String[] bitNorm; // хеш  в битах исходного собщения
+        public static String[] bitMod; // хеш  в битах измененного собщения
+
+        public static int[] diffBitCount; // Массив с данными для графика
     }
 }
