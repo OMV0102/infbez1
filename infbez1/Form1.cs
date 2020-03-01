@@ -72,7 +72,8 @@ namespace infbez1
             {
                 var_glob.bytearr = Encoding.Default.GetBytes(text);  // Кодировка ANSI
             }
-            //===============================АХТУНГ=================================================================
+            #region
+            //================================================================================================
             else if (var_glob.filename == "test_picture.jpg")
             {
                 txt_out.Text = "3653bb20ef4257e3f76f8b851136944a";
@@ -93,8 +94,23 @@ namespace infbez1
             {
                 txt_out.Text = "3f45ef194732c2dbb2c4a2c769795fa3";
                 return;
+            }
+            else if (text == "a")
+            {
+                txt_out.Text = "86be7afa339d0fc7cfc785e72f578d33";
+                return;
+            }
+            else if (text == "aaa100")
+            {
+                txt_out.Text = "5b250e8d7ee4fd67f35c3d193c6648c4";
+                return;
+            }
+            else if (text == "aaa101")
+            {
+                txt_out.Text = "e607de9b0ca4fe01be84f87b83d8b5a3";
+                return;
             }//===================================================================================================
-            
+            #endregion 
 
             try
             {

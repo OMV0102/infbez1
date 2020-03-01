@@ -7,7 +7,7 @@
     <ProjectGuid>{51D955B1-B799-4A95-B3BC-905A34111F6C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>infbez1</RootNamespace>
-    <AssemblyName>infbez1</AssemblyName>
+    <AssemblyName>RIPEMD-160</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
